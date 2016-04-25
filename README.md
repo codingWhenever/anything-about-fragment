@@ -33,3 +33,17 @@ FragmentTransaction.addToBackStack(String) 类似与Android系统为Activity维�
 8.Fragment与OptionMenu进行集成
 
 onCreateOptionsMenu() onOptionsItemSelected() Fragment可以添加自己的MenuItem到Activity的ActionBar或者可选菜单中。 a、在Fragment的onCreate中调用 setHasOptionsMenu(true); b、然后在Fragment子类中实现onCreateOptionsMenu c、如果希望在Fragment中处理MenuItem的点击，也可以在Fragment中实现onOptionsItemSelected；当然了Activity也可以直接处理该MenuItem的点击事件。 d、在Activity中如果希望fragment自己处理菜单点击事件，此处需要在onOptionsItemSelected中调用 return super.onOptionsItemSelected(item);
+
+9.DialogFragment
+DialogFragment在android 3.0时被引入。是一种特殊的Fragment，用于在Activity的内容之上展示一个模态的对话框。典型的用于：展示警告框，输入框，确认框等等。
+在DialogFragment产生之前，我们创建对话框：一般采用AlertDialog和Dialog。注：官方不推荐直接使用Dialog创建对话框。
+
+使用DialogFragment至少需要实现onCreateView或者onCreateDIalog方法。
+1)onCreateView即使用定义的xml布局文件展示Dialog。
+2)onCreateDialog即利用AlertDialog或者Dialog创建出Dialog。
+
+在DialogFragment中有时候需要适配不用分辨率的屏幕，
+在大屏幕上以对话框的形式展示，
+而小屏幕上则直接嵌入当前的Actvity中。注意在这种效果的对话框，只能通过重写onCreateView实现。
+具体情况可见代码中的showDifferentDialog方法
+

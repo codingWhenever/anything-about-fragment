@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import dbh.leo.com.myfragment.fragment.AnotherFragment;
 import dbh.leo.com.myfragment.fragment.ContentFragment;
+import dbh.leo.com.myfragment.fragment.MyDialogFragment;
 import dbh.leo.com.myfragment.fragment.TitleFragment;
 
 /**
@@ -20,7 +21,7 @@ import dbh.leo.com.myfragment.fragment.TitleFragment;
  * c、在Fragment中可以通过getActivity得到当前绑定的Activity的实例，然后进行操作。
  */
 public class MainActivity extends AppCompatActivity implements TitleFragment.FragmentTitleClickListener,
-        ContentFragment.ContentFragmentClickListener, AnotherFragment.AnotherFragmentClickListener {
+        ContentFragment.ContentFragmentClickListener, AnotherFragment.AnotherFragmentClickListener, MyDialogFragment.OnLoginCompleteListener {
 
     private static final String TAG = "MainActivity";
     private TitleFragment titleFragment;
@@ -29,8 +30,8 @@ public class MainActivity extends AppCompatActivity implements TitleFragment.Fra
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         Log.d(TAG, savedInstanceState + "");
@@ -87,6 +88,37 @@ public class MainActivity extends AppCompatActivity implements TitleFragment.Fra
 
         }
         Toast.makeText(this, "I am another fragment", Toast.LENGTH_SHORT).show();
+
+//        showDialogFragment();
+        showDifferentDialog();
+    }
+
+    /**
+     * dialogfragment
+     */
+    private void showDialogFragment() {
+        MyDialogFragment nameFragment = new MyDialogFragment();
+        nameFragment.show(getSupportFragmentManager(), "loginDialog");
+    }
+
+    /**
+     * 适配不同大小的屏幕
+     * 大屏幕以dialog形式显示（注意此处只能通过重写onCreateView来实现）
+     * 小屏幕直接嵌入到当前activity
+     */
+    private void showDifferentDialog() {
+        FragmentManager manager = getSupportFragmentManager();
+        MyDialogFragment nameFragment = new MyDialogFragment();
+        boolean isLargeLayout = getResources().getBoolean(R.bool.large_layout);
+        if (isLargeLayout) {
+            nameFragment.show(manager, "largeLayout");
+        } else {
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            transaction.replace(R.id.framelayout, nameFragment);
+            transaction.commit();
+        }
+
     }
 
     @Override
@@ -108,5 +140,16 @@ public class MainActivity extends AppCompatActivity implements TitleFragment.Fra
                 return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    /**
+     * 登录回调
+     *
+     * @param name
+     * @param password
+     */
+    @Override
+    public void onLoginInputComplete(String name, String password) {
+        Toast.makeText(getApplicationContext(), "login completed and username = " + name + ",password = " + password, Toast.LENGTH_SHORT).show();
     }
 }

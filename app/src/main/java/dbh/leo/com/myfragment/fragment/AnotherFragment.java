@@ -3,6 +3,8 @@ package dbh.leo.com.myfragment.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,5 +46,23 @@ public class AnotherFragment extends Fragment implements View.OnClickListener {
         if (mListener != null) {
             mListener.onAnotherClick();
         }
+
+//        showDifferentDialog();
+
+    }
+
+    private void showDifferentDialog() {
+        FragmentManager manager = getFragmentManager();
+        MyDialogFragment nameFragment = new MyDialogFragment();
+        boolean isLargeLayout = getResources().getBoolean(R.bool.large_layout);
+        if (isLargeLayout) {
+            nameFragment.show(manager, "largeLayout");
+        } else {
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            transaction.replace(R.id.framelayout, nameFragment);
+            transaction.commit();
+        }
+
     }
 }
